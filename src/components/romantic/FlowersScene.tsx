@@ -1,0 +1,106 @@
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { BackButton } from "./ToysScene";
+import flowers from "@/assets/flowers.jpg";
+
+// Soft ambient royalty-free tune (pixabay CDN)
+const TRACK = "https://cdn.pixabay.com/audio/2022/10/18/audio_31c2730e64.mp3";
+
+export function FlowersScene({ onBack, onComplete }: { onBack: () => void; onComplete: () => void }) {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    onComplete();
+  }, [onComplete]);
+
+  const toggle = () => {
+    const a = audioRef.current;
+    if (!a) return;
+    if (playing) {
+      a.pause();
+      setPlaying(false);
+    } else {
+      a.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+    }
+  };
+
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -30 }}
+      transition={{ duration: 0.5 }}
+      className="relative z-10 mx-auto flex min-h-screen w-full max-w-4xl flex-col items-center justify-center px-4 py-10"
+    >
+      <BackButton onBack={onBack} />
+
+      <h2 className="mb-2 text-center text-4xl text-gradient-rose sm:text-5xl">A bouquet that never wilts</h2>
+      <p className="mb-8 text-center font-script text-xl text-muted-foreground">because you deserve forever flowers</p>
+
+      <div className="glass relative w-full overflow-hidden rounded-3xl p-3 sm:p-4">
+        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl">
+          <motion.img
+            src={flowers}
+            alt="A bouquet of roses"
+            width={1600}
+            height={1024}
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 6, ease: "easeOut" }}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          {/* Bloom overlay */}
+          <BloomOverlay />
+          {/* play control */}
+          <button
+            onClick={toggle}
+            className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-3 rounded-full px-6 py-3 text-sm text-foreground/90 glass transition-all hover:scale-105"
+            aria-label={playing ? "Pause music" : "Play music"}
+          >
+            <span className="text-lg">{playing ? "❚❚" : "▶"}</span>
+            <span className="font-script text-lg">{playing ? "playing our song" : "play our song"}</span>
+          </button>
+        </div>
+      </div>
+
+      <p className="mt-6 max-w-lg text-center font-script text-xl text-foreground/70">
+        Every petal here is a small thank you, for every moment you've made bloom in me.
+      </p>
+
+      <audio ref={audioRef} src={TRACK} loop preload="none" />
+    </motion.section>
+  );
+}
+
+function BloomOverlay() {
+  const blooms = Array.from({ length: 14 }).map((_, i) => ({
+    id: i,
+    left: Math.random() * 100,
+    top: Math.random() * 100,
+    delay: Math.random() * 4,
+    size: 14 + Math.random() * 24,
+    hue: 340 + Math.random() * 40,
+  }));
+  return (
+    <div className="pointer-events-none absolute inset-0">
+      {blooms.map((b) => (
+        <motion.span
+          key={b.id}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: [0, 1, 0.8], opacity: [0, 0.9, 0] }}
+          transition={{ duration: 5, delay: b.delay, repeat: Infinity, repeatDelay: 2 }}
+          className="absolute rounded-full"
+          style={{
+            left: `${b.left}%`,
+            top: `${b.top}%`,
+            width: b.size,
+            height: b.size,
+            background: `radial-gradient(circle, oklch(0.92 0.10 ${b.hue}), oklch(0.70 0.20 ${b.hue}) 70%, transparent 75%)`,
+            filter: "blur(1px)",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
