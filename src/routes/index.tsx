@@ -31,10 +31,11 @@ function Index() {
   const [music, setMusic] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const firedConfetti = useRef(false);
+  const [unlocked, setUnlocked] = useState(false);
 
   useEffect(() => {
     try {
-      if (localStorage.getItem(PIN_KEY) === "1") setScene("intro");
+      if (localStorage.getItem(PIN_KEY) === "1") setUnlocked(true);
     } catch {}
   }, []);
 
