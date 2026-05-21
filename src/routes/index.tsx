@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { Petals, Sparkles } from "@/components/romantic/Particles";
-import { GiftBox } from "@/components/romantic/GiftBox";
+
 import { ToysScene } from "@/components/romantic/ToysScene";
 import { LetterScene } from "@/components/romantic/LetterScene";
 import { FlowersScene } from "@/components/romantic/FlowersScene";
