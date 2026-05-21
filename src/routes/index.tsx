@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Scene = "pin" | "intro" | "hub" | "toys" | "letter" | "flowers";
+type Scene = "teddy" | "pin" | "intro" | "hub" | "toys" | "letter" | "flowers";
 
 const PIN_KEY = "lovebox.unlocked";
 const CORRECT_PIN = "011226";
