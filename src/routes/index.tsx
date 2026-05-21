@@ -153,8 +153,8 @@ function Index() {
                 label="Stuff Toys"
                 hint="soft hugs"
                 anim="animate-float-slow"
-                visited={!!visited.toys}
-                onClick={() => { markVisited("toys"); setScene("toys"); }}
+                visited={!!visited.flowers}
+                onClick={() => { markVisited("flowers"); setScene("flowers"); }}
               />
               <FloatingItem
                 emoji="💌"
@@ -169,8 +169,8 @@ function Index() {
                 label="Flowers"
                 hint="forever blooms"
                 anim="animate-float-fast"
-                visited={!!visited.flowers}
-                onClick={() => { markVisited("flowers"); setScene("flowers"); }}
+                visited={!!visited.toys}
+                onClick={() => { markVisited("toys"); setScene("toys"); }}
               />
             </div>
 
