@@ -94,6 +94,7 @@ function Index() {
       />
 
       <AnimatePresence mode="wait">
+        {scene === "teddy" && <TeddyIntro key="teddy" onContinue={() => setScene("pin")} />}
         {scene === "pin" && <PinScene key="pin" onUnlock={unlock} />}
 
         {scene === "intro" && (
