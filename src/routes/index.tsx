@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { Petals, Sparkles } from "@/components/romantic/Particles";
-import { GiftBox } from "@/components/romantic/GiftBox";
+
 import { ToysScene } from "@/components/romantic/ToysScene";
 import { LetterScene } from "@/components/romantic/LetterScene";
 import { FlowersScene } from "@/components/romantic/FlowersScene";
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Scene = "teddy" | "pin" | "intro" | "hub" | "toys" | "letter" | "flowers";
+type Scene = "teddy" | "pin" | "hub" | "toys" | "letter" | "flowers";
 
 const PIN_KEY = "lovebox.unlocked";
 const CORRECT_PIN = "011226";
@@ -72,7 +72,7 @@ function Index() {
 
   const unlock = () => {
     try { localStorage.setItem(PIN_KEY, "1"); } catch {}
-    setScene("intro");
+    setScene("hub");
   };
 
   return (
@@ -95,37 +95,8 @@ function Index() {
       />
 
       <AnimatePresence mode="wait">
-        {scene === "teddy" && <TeddyIntro key="teddy" onContinue={() => setScene(unlocked ? "intro" : "pin")} />}
+        {scene === "teddy" && <TeddyIntro key="teddy" onContinue={() => setScene(unlocked ? "hub" : "pin")} />}
         {scene === "pin" && <PinScene key="pin" onUnlock={unlock} />}
-
-        {scene === "intro" && (
-          <motion.section
-            key="intro"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 1.1 }}
-            transition={{ duration: 0.6 }}
-            className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4"
-          >
-            <motion.h1
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.8 }}
-              className="mb-2 text-center text-4xl text-gradient-rose sm:text-7xl"
-            >
-              For you, with all of me
-            </motion.h1>
-            <motion.p
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="mb-10 text-center font-script text-2xl text-foreground/70 sm:text-3xl"
-            >
-              a tiny love box, just a tap away
-            </motion.p>
-            <GiftBox onOpen={() => setScene("hub")} />
-          </motion.section>
-        )}
 
         {scene === "hub" && (
           <motion.section
