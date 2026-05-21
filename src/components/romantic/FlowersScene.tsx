@@ -44,7 +44,7 @@ export function FlowersScene({ onBack, onComplete }: { onBack: () => void; onCom
         <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl">
           <video
             ref={videoRef}
-            src="/video/ginintuang-tanawin.mp4"
+            src="https://drive.google.com/uc?export=download&id=1AG4LaZDi_hEGoA1pWUD8LPKYJZjyrML5"
             autoPlay
             muted
             loop

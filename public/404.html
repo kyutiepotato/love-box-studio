@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script>
+      // Redirect to index.html, preserving the path as a query param
+      const path = window.location.pathname.replace('/love-box-studio', '');
+      window.location.replace(
+        '/love-box-studio/?p=' + encodeURIComponent(path)
+      );
+    </script>
+  </head>
+</html>
