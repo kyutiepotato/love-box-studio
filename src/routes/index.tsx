@@ -72,7 +72,7 @@ function Index() {
 
   const unlock = () => {
     try { localStorage.setItem(PIN_KEY, "1"); } catch {}
-    setScene("intro");
+    setScene("hub");
   };
 
   return (
