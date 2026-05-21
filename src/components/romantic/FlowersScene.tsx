@@ -3,9 +3,25 @@ import { motion } from "framer-motion";
 import { BackButton } from "./ToysScene";
 
 export function FlowersScene({ onBack, onComplete }: { onBack: () => void; onComplete: () => void }) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+
   useEffect(() => {
     onComplete();
   }, [onComplete]);
+
+  const toggle = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (playing) {
+      v.muted = true;
+      setPlaying(false);
+    } else {
+      v.muted = false;
+      v.play().catch(() => {});
+      setPlaying(true);
+    }
+  };
 
   return (
     <motion.section
@@ -26,13 +42,26 @@ export function FlowersScene({ onBack, onComplete }: { onBack: () => void; onCom
 
       <div className="glass relative w-full overflow-hidden rounded-3xl p-3 sm:p-4">
         <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl">
-          <iframe
-            src="https://www.youtube.com/embed/-fbrjWHl87E?autoplay=1&mute=1&loop=1&playlist=-fbrjWHl87E&controls=0&playsinline=1"
-            className="absolute inset-0 h-full w-full"
-            allow="autoplay; encrypted-media"
-            allowFullScreen
+          <video
+            ref={videoRef}
+            src="/video/ginintuang-tanawin.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 h-full w-full object-cover"
           />
           <BloomOverlay />
+          <button
+            onClick={toggle}
+            className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-3 rounded-full px-6 py-3 text-sm text-foreground/90 glass transition-all hover:scale-105"
+            aria-label={playing ? "Mute music" : "Play music"}
+          >
+            <span className="text-lg">{playing ? "❚❚" : "▶"}</span>
+            <span className="font-script text-lg">
+              {playing ? "playing our song" : "play our song"}
+            </span>
+          </button>
         </div>
       </div>
 
