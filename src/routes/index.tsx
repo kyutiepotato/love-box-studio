@@ -7,7 +7,6 @@ import { GiftBox } from "@/components/romantic/GiftBox";
 import { ToysScene } from "@/components/romantic/ToysScene";
 import { LetterScene } from "@/components/romantic/LetterScene";
 import { FlowersScene } from "@/components/romantic/FlowersScene";
-import { MemoriesScene } from "@/components/romantic/MemoriesScene";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -21,32 +20,26 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Scene = "name" | "intro" | "hub" | "toys" | "letter" | "flowers" | "memories";
+type Scene = "pin" | "intro" | "hub" | "toys" | "letter" | "flowers";
 
-const NAME_KEY = "lovebox.name";
+const PIN_KEY = "lovebox.unlocked";
+const CORRECT_PIN = "011226";
 
 function Index() {
-  const [name, setName] = useState<string>("");
-  const [scene, setScene] = useState<Scene>("name");
+  const [scene, setScene] = useState<Scene>("pin");
   const [visited, setVisited] = useState<Record<string, boolean>>({});
   const [music, setMusic] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const firedConfetti = useRef(false);
 
-  // Restore saved name
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(NAME_KEY);
-      if (saved) {
-        setName(saved);
-        setScene("intro");
-      }
+      if (localStorage.getItem(PIN_KEY) === "1") setScene("intro");
     } catch {}
   }, []);
 
-  const allSeen = visited.toys && visited.letter && visited.flowers && visited.memories;
+  const allSeen = visited.toys && visited.letter && visited.flowers;
 
-  // Confetti finale
   useEffect(() => {
     if (allSeen && !firedConfetti.current) {
       firedConfetti.current = true;
@@ -76,11 +69,8 @@ function Index() {
 
   const markVisited = (k: Scene) => setVisited((v) => ({ ...v, [k]: true }));
 
-  const submitName = (n: string) => {
-    const trimmed = n.trim().slice(0, 40);
-    if (!trimmed) return;
-    try { localStorage.setItem(NAME_KEY, trimmed); } catch {}
-    setName(trimmed);
+  const unlock = () => {
+    try { localStorage.setItem(PIN_KEY, "1"); } catch {}
     setScene("intro");
   };
 
@@ -104,9 +94,7 @@ function Index() {
       />
 
       <AnimatePresence mode="wait">
-        {scene === "name" && (
-          <NameScene key="name" onSubmit={submitName} />
-        )}
+        {scene === "pin" && <PinScene key="pin" onUnlock={unlock} />}
 
         {scene === "intro" && (
           <motion.section
@@ -123,7 +111,7 @@ function Index() {
               transition={{ delay: 0.2, duration: 0.8 }}
               className="mb-2 text-center text-4xl text-gradient-rose sm:text-7xl"
             >
-              For {name || "you"}, with all of me
+              For you, with all of me
             </motion.h1>
             <motion.p
               initial={{ y: 20, opacity: 0 }}
@@ -152,13 +140,13 @@ function Index() {
               transition={{ duration: 0.6 }}
               className="mb-2 text-center text-3xl text-gradient-rose sm:text-6xl"
             >
-              Hi {name || "love"} — pick one
+              Pick one, love
             </motion.h2>
             <p className="mb-10 text-center font-script text-lg text-foreground/70 sm:text-2xl">
-              four little surprises, opened in any order
+              three little surprises, opened in any order
             </p>
 
-            <div className="grid w-full max-w-5xl grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
+            <div className="grid w-full max-w-4xl grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
               <FloatingItem
                 emoji="🧸"
                 label="Stuff Toys"
@@ -183,14 +171,6 @@ function Index() {
                 visited={!!visited.flowers}
                 onClick={() => { markVisited("flowers"); setScene("flowers"); }}
               />
-              <FloatingItem
-                emoji="📸"
-                label="Memories"
-                hint="our polaroids"
-                anim="animate-float-mid"
-                visited={!!visited.memories}
-                onClick={() => { markVisited("memories"); setScene("memories"); }}
-              />
             </div>
 
             <AnimatePresence>
@@ -202,7 +182,7 @@ function Index() {
                   className="glass mt-12 max-w-xl rounded-3xl px-6 py-6 text-center sm:px-8"
                 >
                   <p className="font-script text-2xl text-gradient-rose sm:text-3xl">
-                    you found them all, {name || "love"} 💖
+                    you found them all 💖
                   </p>
                   <p className="mt-2 text-foreground/75">
                     a little secret: every petal, every word, every soft toy in this box —
@@ -221,17 +201,37 @@ function Index() {
         {scene === "flowers" && (
           <FlowersScene key="flowers" onBack={() => setScene("hub")} onComplete={() => markVisited("flowers")} />
         )}
-        {scene === "memories" && <MemoriesScene key="memories" onBack={() => setScene("hub")} />}
       </AnimatePresence>
     </main>
   );
 }
 
-function NameScene({ onSubmit }: { onSubmit: (n: string) => void }) {
-  const [value, setValue] = useState("");
+function PinScene({ onUnlock }: { onUnlock: () => void }) {
+  const [pin, setPin] = useState("");
+  const [error, setError] = useState(false);
+  const [shake, setShake] = useState(0);
+
+  const press = (d: string) => {
+    if (pin.length >= 6) return;
+    const next = pin + d;
+    setError(false);
+    setPin(next);
+    if (next.length === 6) {
+      setTimeout(() => {
+        if (next === CORRECT_PIN) onUnlock();
+        else {
+          setError(true);
+          setShake((s) => s + 1);
+          setTimeout(() => setPin(""), 600);
+        }
+      }, 150);
+    }
+  };
+  const back = () => { setError(false); setPin((p) => p.slice(0, -1)); };
+
   return (
     <motion.section
-      key="name"
+      key="pin"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -244,7 +244,7 @@ function NameScene({ onSubmit }: { onSubmit: (n: string) => void }) {
         transition={{ delay: 0.2, duration: 0.7 }}
         className="mb-3 text-center text-4xl text-gradient-rose sm:text-6xl"
       >
-        Before we begin…
+        Enter our little secret
       </motion.h1>
       <motion.p
         initial={{ y: 20, opacity: 0 }}
@@ -252,33 +252,56 @@ function NameScene({ onSubmit }: { onSubmit: (n: string) => void }) {
         transition={{ delay: 0.4, duration: 0.7 }}
         className="mb-8 text-center font-script text-xl text-foreground/70 sm:text-2xl"
       >
-        what should I call you, lovely?
+        the day my heart said yes 💖
       </motion.p>
-      <motion.form
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.6, duration: 0.7 }}
-        onSubmit={(e) => { e.preventDefault(); onSubmit(value); }}
-        className="glass flex w-full max-w-md flex-col gap-3 rounded-3xl p-5 sm:flex-row sm:items-center sm:p-6"
+
+      <motion.div
+        key={shake}
+        animate={error ? { x: [0, -10, 10, -8, 8, 0] } : {}}
+        transition={{ duration: 0.4 }}
+        className="glass flex flex-col items-center gap-6 rounded-3xl p-6 sm:p-8"
       >
-        <input
-          autoFocus
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="your name"
-          maxLength={40}
-          className="flex-1 rounded-2xl border-0 bg-white/70 px-4 py-3 text-lg text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary sm:text-xl"
-        />
-        <button
-          type="submit"
-          disabled={!value.trim()}
-          className="rounded-2xl px-6 py-3 text-base font-medium text-primary-foreground transition-all active:scale-95 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
-          style={{ background: "var(--gradient-rose)", boxShadow: "var(--shadow-glow)" }}
-        >
-          open my gift →
-        </button>
-      </motion.form>
+        <div className="flex gap-2 sm:gap-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-4 w-4 rounded-full border-2 transition-all sm:h-5 sm:w-5"
+              style={{
+                borderColor: error ? "oklch(0.6 0.2 25)" : "var(--primary)",
+                background: i < pin.length ? (error ? "oklch(0.6 0.2 25)" : "var(--primary)") : "transparent",
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="grid grid-cols-3 gap-3 sm:gap-4">
+          {["1","2","3","4","5","6","7","8","9"].map((d) => (
+            <PinKey key={d} onClick={() => press(d)}>{d}</PinKey>
+          ))}
+          <div />
+          <PinKey onClick={() => press("0")}>0</PinKey>
+          <PinKey onClick={back} aria-label="Delete">⌫</PinKey>
+        </div>
+
+        {error && (
+          <p className="text-sm text-[oklch(0.55_0.2_25)]">try again, love</p>
+        )}
+      </motion.div>
     </motion.section>
+  );
+}
+
+function PinKey({ children, onClick, ...rest }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <motion.button
+      whileTap={{ scale: 0.9 }}
+      whileHover={{ scale: 1.05 }}
+      onClick={onClick}
+      {...(rest as any)}
+      className="glass flex h-14 w-14 items-center justify-center rounded-full text-2xl font-medium text-foreground/85 transition-shadow hover:shadow-[var(--shadow-glow)] sm:h-16 sm:w-16 sm:text-3xl"
+    >
+      {children}
+    </motion.button>
   );
 }
 
