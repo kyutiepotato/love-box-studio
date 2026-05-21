@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import toy1 from "@/assets/toy1.jpg";
-import toy2 from "@/assets/toy2.jpg";
-import toy3 from "@/assets/toy3.jpg";
+import toy1 from "@/assets/1.jpg";
+import toy2 from "@/assets/5.jpg";
+import toy3 from "@/assets/3.jpg";
 import toy4 from "@/assets/toy4.jpg";
 
 const TOYS = [
-  { src: toy1, caption: "Soft as our first hug" },
-  { src: toy2, caption: "Holding a tiny piece of my heart" },
-  { src: toy3, caption: "A little reminder of you" },
-  { src: toy4, caption: "Wrapped up just for you" },
+  { src: toy1, caption: "Pakyut pana HAHAHHA" },
+  { src: toy2, caption: "Ari cutie ayy" },
+  { src: toy3, caption: "You shine everyday, hon" },
+  { src: toy4, caption: "Hehehehe" },
 ];
 
 export function ToysScene({ onBack }: { onBack: () => void }) {

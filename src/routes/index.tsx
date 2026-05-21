@@ -89,7 +89,7 @@ function Index() {
       </button>
       <audio
         ref={audioRef}
-        src="https://cdn.pixabay.com/audio/2022/03/15/audio_c8c8a73467.mp3"
+        src="/music/paulyudin-wedding-485932.mp3"
         loop
         preload="none"
       />
@@ -113,7 +113,7 @@ function Index() {
               transition={{ duration: 0.6 }}
               className="mb-2 text-center text-3xl text-gradient-rose sm:text-6xl"
             >
-              Pick one, love
+              Pick one, Hon
             </motion.h2>
             <p className="mb-10 text-center font-script text-lg text-foreground/70 sm:text-2xl">
               three little surprises, opened in any order
@@ -225,7 +225,7 @@ function PinScene({ onUnlock }: { onUnlock: () => void }) {
         transition={{ delay: 0.4, duration: 0.7 }}
         className="mb-8 text-center font-script text-xl text-foreground/70 sm:text-2xl"
       >
-        the day my heart said yes 💖
+        the day your heart said yes 💖
       </motion.p>
 
       <motion.div
@@ -257,7 +257,7 @@ function PinScene({ onUnlock }: { onUnlock: () => void }) {
         </div>
 
         {error && (
-          <p className="text-sm text-[oklch(0.55_0.2_25)]">try again, love</p>
+          <p className="text-sm text-[oklch(0.55_0.2_25)]">try again, hon</p>
         )}
       </motion.div>
     </motion.section>
