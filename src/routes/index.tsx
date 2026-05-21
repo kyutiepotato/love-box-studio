@@ -20,13 +20,13 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Scene = "pin" | "intro" | "hub" | "toys" | "letter" | "flowers";
+type Scene = "teddy" | "pin" | "intro" | "hub" | "toys" | "letter" | "flowers";
 
 const PIN_KEY = "lovebox.unlocked";
 const CORRECT_PIN = "011226";
 
 function Index() {
-  const [scene, setScene] = useState<Scene>("pin");
+  const [scene, setScene] = useState<Scene>("teddy");
   const [visited, setVisited] = useState<Record<string, boolean>>({});
   const [music, setMusic] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -94,6 +94,7 @@ function Index() {
       />
 
       <AnimatePresence mode="wait">
+        {scene === "teddy" && <TeddyIntro key="teddy" onContinue={() => setScene("pin")} />}
         {scene === "pin" && <PinScene key="pin" onUnlock={unlock} />}
 
         {scene === "intro" && (
@@ -152,8 +153,8 @@ function Index() {
                 label="Stuff Toys"
                 hint="soft hugs"
                 anim="animate-float-slow"
-                visited={!!visited.toys}
-                onClick={() => { markVisited("toys"); setScene("toys"); }}
+                visited={!!visited.flowers}
+                onClick={() => { markVisited("flowers"); setScene("flowers"); }}
               />
               <FloatingItem
                 emoji="💌"
@@ -168,8 +169,8 @@ function Index() {
                 label="Flowers"
                 hint="forever blooms"
                 anim="animate-float-fast"
-                visited={!!visited.flowers}
-                onClick={() => { markVisited("flowers"); setScene("flowers"); }}
+                visited={!!visited.toys}
+                onClick={() => { markVisited("toys"); setScene("toys"); }}
               />
             </div>
 
@@ -287,6 +288,62 @@ function PinScene({ onUnlock }: { onUnlock: () => void }) {
           <p className="text-sm text-[oklch(0.55_0.2_25)]">try again, love</p>
         )}
       </motion.div>
+    </motion.section>
+  );
+}
+
+function TeddyIntro({ onContinue }: { onContinue: () => void }) {
+  return (
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, scale: 1.05 }}
+      transition={{ duration: 0.6 }}
+      className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4"
+    >
+      <motion.button
+        onClick={onContinue}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.92 }}
+        aria-label="Yes, hug me"
+        className="group flex flex-col items-center gap-6 outline-none"
+      >
+        <motion.div
+          animate={{ y: [0, -10, 0] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          className="relative flex h-44 w-44 items-center justify-center rounded-full sm:h-56 sm:w-56"
+          style={{
+            background:
+              "radial-gradient(circle at 30% 30%, oklch(1 0 0 / 0.9), oklch(0.88 0.08 225 / 0.5))",
+            boxShadow: "0 20px 60px oklch(0.6 0.15 235 / 0.35), inset 0 -8px 24px oklch(0.6 0.15 235 / 0.25)",
+          }}
+        >
+          <span className="text-[7rem] drop-shadow-md sm:text-[9rem]">🧸</span>
+          <motion.span
+            animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
+            transition={{ duration: 1.6, repeat: Infinity }}
+            className="absolute -right-2 -top-2 text-3xl sm:text-4xl"
+          >
+            💗
+          </motion.span>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.7 }}
+          className="glass relative max-w-xs rounded-3xl px-6 py-4 text-center sm:max-w-md sm:px-8 sm:py-5"
+        >
+          <p className="font-script text-2xl text-gradient-rose sm:text-3xl">
+            can i hug you, hon? 🥺
+          </p>
+          <p className="mt-1 text-sm text-foreground/70 sm:text-base">tap me, please</p>
+          <span
+            className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45"
+            style={{ background: "inherit" }}
+          />
+        </motion.div>
+      </motion.button>
     </motion.section>
   );
 }
