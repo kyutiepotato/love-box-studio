@@ -26,7 +26,7 @@ const PIN_KEY = "lovebox.unlocked";
 const CORRECT_PIN = "011226";
 
 function Index() {
-  const [scene, setScene] = useState<Scene>("pin");
+  const [scene, setScene] = useState<Scene>("teddy");
   const [visited, setVisited] = useState<Record<string, boolean>>({});
   const [music, setMusic] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
