@@ -95,37 +95,8 @@ function Index() {
       />
 
       <AnimatePresence mode="wait">
-        {scene === "teddy" && <TeddyIntro key="teddy" onContinue={() => setScene(unlocked ? "intro" : "pin")} />}
+        {scene === "teddy" && <TeddyIntro key="teddy" onContinue={() => setScene(unlocked ? "hub" : "pin")} />}
         {scene === "pin" && <PinScene key="pin" onUnlock={unlock} />}
-
-        {scene === "intro" && (
-          <motion.section
-            key="intro"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 1.1 }}
-            transition={{ duration: 0.6 }}
-            className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4"
-          >
-            <motion.h1
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.8 }}
-              className="mb-2 text-center text-4xl text-gradient-rose sm:text-7xl"
-            >
-              For you, with all of me
-            </motion.h1>
-            <motion.p
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="mb-10 text-center font-script text-2xl text-foreground/70 sm:text-3xl"
-            >
-              a tiny love box, just a tap away
-            </motion.p>
-            <GiftBox onOpen={() => setScene("hub")} />
-          </motion.section>
-        )}
 
         {scene === "hub" && (
           <motion.section
