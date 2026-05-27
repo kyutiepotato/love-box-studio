@@ -41,10 +41,11 @@ export function FlowersScene({ onBack, onComplete }: { onBack: () => void; onCom
       </p>
 
       <div className="glass relative w-full overflow-hidden rounded-3xl p-3 sm:p-4">
-        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl">
+        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-black">
+          {/* ✅ Remove the self-close — everything goes INSIDE this div */}
           <video
             ref={videoRef}
-            src="/video/ginintuang-tanawin.mp4"
+            src="https://raw.githubusercontent.com/kyutiepotato/love-box-studio/main/public/video/ginintuang-tanawin.mp4"
             autoPlay
             muted
             loop

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import toy1 from "@/assets/1.jpg";
 import toy2 from "@/assets/5.jpg";
 import toy3 from "@/assets/3.jpg";
-import toy4 from "@/assets/toy4.jpg";
+import toy4 from "@/assets/4.jpg";
 
 const TOYS = [
   { src: toy1, caption: "Pakyut pana HAHAHHA" },
